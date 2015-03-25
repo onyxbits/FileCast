@@ -1,7 +1,6 @@
 package de.onyxbits.filecast.gui;
 
 import java.awt.BorderLayout;
-import java.awt.Dimension;
 import java.awt.Image;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
@@ -20,6 +19,7 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JSeparator;
 import javax.swing.JSplitPane;
 import javax.swing.JTextField;
 import javax.swing.JTree;
@@ -57,6 +57,7 @@ public class MainWindow extends JFrame implements Runnable, TreeSelectionListene
 		this.store = store;
 		copyAction = new CopyAction();
 		pasteAction = new PasteAction();
+		CodeAction codeAction = new CodeAction();
 
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		menuBar = new JMenuBar();
@@ -66,6 +67,8 @@ public class MainWindow extends JFrame implements Runnable, TreeSelectionListene
 		fileMenu.add(quitItem);
 		menuBar.add(fileMenu);
 		JMenu editMenu = new JMenu(new EditMenuAction());
+		editMenu.add(new JMenuItem(codeAction));
+		editMenu.add(new JSeparator());
 		editMenu.add(new JMenuItem(copyAction));
 		editMenu.add(new JMenuItem(pasteAction));
 		menuBar.add(editMenu);
@@ -80,7 +83,7 @@ public class MainWindow extends JFrame implements Runnable, TreeSelectionListene
 		directory.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
 		directory.setPreferredSize(null);
 		contentView = new ContentView();
-		contentView.setPreferredSize(new Dimension(400, 400));
+		codeAction.contentView=contentView;
 		directory.getActionMap().put("copy", copyAction);
 
 		location = new JTextField(initial.getAbsolutePath());
@@ -101,6 +104,7 @@ public class MainWindow extends JFrame implements Runnable, TreeSelectionListene
 		content.add(splitPane, BorderLayout.CENTER);
 		content.add(locationBar, BorderLayout.NORTH);
 		setContentPane(content);
+		content.setBorder(new EmptyBorder(0,3,1,3));
 		List<Image> icons = new Vector<Image>();
 		for (String ico : ICONRESOURCES) {
 			try {
@@ -155,14 +159,14 @@ public class MainWindow extends JFrame implements Runnable, TreeSelectionListene
 			String url = "http://" + System.getProperty(App.SYSPROP_ADDR) + ":"
 					+ System.getProperty(App.SYSPROP_PORT) + PickupHandler.pathFor(store.register(ftn.file));
 			contentView.qrView.setContentString(url);
-			contentView.uri.setText(url);
+			contentView.textView.setText(url);
 			copyAction.value = url;
 			setTitle(ftn.file.getPath() + " - Filecast");
 			location.setText(ftn.file.getAbsolutePath());
 			location.setCaretPosition(location.getText().length());
 		}
 		catch (Exception e1) {
-			contentView.uri.setText("");
+			contentView.textView.setText("");
 			contentView.qrView.clear();
 			copyAction.value = "";
 			setTitle("Filecast");

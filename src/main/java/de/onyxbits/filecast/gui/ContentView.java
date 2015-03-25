@@ -2,7 +2,10 @@ package de.onyxbits.filecast.gui;
 
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 
+import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 import javax.swing.JTextPane;
 
@@ -22,18 +25,24 @@ class ContentView extends JPanel {
 
 	protected QrView qrView;
 
-	protected JTextPane uri;
+	protected JTextPane textView;
 
 	public ContentView() {
 		qrView = new QrView();
-		uri = new JTextPane();
-		uri.setBackground(null);
-		uri.setBorder(null);
-		uri.setEditable(false);
-		uri.setContentType("text/plain");
-		uri.setFont(new Font("monospaced", Font.PLAIN, 14));
+		textView = new JTextPane();
+		textView.setContentType("text/plain");
+		textView.setFont(new Font("monospaced", Font.PLAIN, 14));
 		qrView.setPreferredSize(new Dimension(300, 300));
-		add(qrView);
-		add(uri);
+		
+		setLayout(new GridBagLayout());
+		GridBagConstraints gbc = new GridBagConstraints();
+		gbc.weightx=1;
+		gbc.weighty=0.5d;
+		add(qrView,gbc);
+		
+		gbc.weightx=0;
+		gbc.weighty=0.5d;
+		gbc.gridy=1;
+		add(textView,gbc);
 	}
 }
