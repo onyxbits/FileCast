@@ -32,7 +32,7 @@ class ContentView extends JPanel {
 		textView = new JTextPane();
 		textView.setContentType("text/plain");
 		textView.setFont(new Font("monospaced", Font.PLAIN, 14));
-		qrView.setPreferredSize(new Dimension(300, 300));
+		qrView.setPreferredSize(new Dimension(350, 350));
 		
 		setLayout(new GridBagLayout());
 		GridBagConstraints gbc = new GridBagConstraints();
