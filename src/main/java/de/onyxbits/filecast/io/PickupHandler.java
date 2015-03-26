@@ -39,6 +39,7 @@ public class PickupHandler extends AbstractHandler {
 		File requested = store.lookup(getKey(target));
 		response.setStatus(HttpServletResponse.SC_OK);
 
+		// Handle classpath resources
 		InputStream ins = getClass().getClassLoader().getResourceAsStream("rsrc" + target);
 		if (ins != null) {
 			byte[] b = IOUtils.toByteArray(ins);
@@ -50,6 +51,7 @@ public class PickupHandler extends AbstractHandler {
 			return;
 		}
 
+		// Can't handle -> bail
 		if (requested == null || !requested.canRead()) {
 			response.setStatus(HttpServletResponse.SC_FORBIDDEN);
 			response.sendError(HttpServletResponse.SC_FORBIDDEN, "403 - FORBIDDEN");
@@ -59,9 +61,10 @@ public class PickupHandler extends AbstractHandler {
 			return;
 		}
 
+		// Handle File Download
 		if (requested.isFile()) {
 			response.setHeader("Content-Length", new Long(requested.length()).toString());
-			response.setHeader("Content-Disposition", "attachment; filename=" + requested.getName());
+			response.setHeader("Content-Disposition", "attachment; filename=\"" + requested.getName()+"\"");
 			Buffer mime = mimeTypes.getMimeByExtension(requested.getName());
 			if (mime != null) {
 				response.setContentType(mime.toString());
@@ -71,6 +74,8 @@ public class PickupHandler extends AbstractHandler {
 			IOUtils.copy(new FileInputStream(requested), response.getOutputStream());
 			logger.info("FINISHED: " + baseRequest.getRemoteAddr() + " -> " + requested.getPath());
 		}
+		
+		// Handle Directory listing
 		if (requested.isDirectory()) {
 			logger.info("LIST: " + baseRequest.getRemoteAddr() + " -> " + requested.getPath());
 			response.setContentType("text/html; charset=UTF-8");
