@@ -83,7 +83,7 @@ public class MainWindow extends JFrame implements Runnable, TreeSelectionListene
 		directory.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
 		directory.setPreferredSize(null);
 		contentView = new ContentView();
-		codeAction.contentView=contentView;
+		codeAction.contentView = contentView;
 		directory.getActionMap().put("copy", copyAction);
 
 		location = new JTextField(initial.getAbsolutePath());
@@ -104,7 +104,7 @@ public class MainWindow extends JFrame implements Runnable, TreeSelectionListene
 		content.add(splitPane, BorderLayout.CENTER);
 		content.add(locationBar, BorderLayout.NORTH);
 		setContentPane(content);
-		content.setBorder(new EmptyBorder(0,3,1,3));
+		content.setBorder(new EmptyBorder(0, 3, 1, 3));
 		List<Image> icons = new Vector<Image>();
 		for (String ico : ICONRESOURCES) {
 			try {
@@ -125,13 +125,17 @@ public class MainWindow extends JFrame implements Runnable, TreeSelectionListene
 	 *          the file to display
 	 */
 	public void selectFile(File file) {
-		FileTreeNode ftn = (FileTreeNode) directory.getModel().getRoot();
-		ftn = ftn.searchFor(file);
-		TreePath tp = ftn.getPath();
-		directory.setSelectionPath(tp);
-		directory.scrollPathToVisible(tp);
-		if (file.isDirectory()) {
-			directory.expandPath(tp);
+		try {
+			FileTreeNode ftn = (FileTreeNode) directory.getModel().getRoot();
+			ftn = ftn.searchFor(file);
+			TreePath tp = ftn.getPath();
+			directory.setSelectionPath(tp);
+			directory.scrollPathToVisible(tp);
+			if (file.isDirectory()) {
+				directory.expandPath(tp);
+			}
+		}
+		catch (NullPointerException e) {
 		}
 	}
 
