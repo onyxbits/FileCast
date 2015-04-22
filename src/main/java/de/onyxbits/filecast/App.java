@@ -44,7 +44,7 @@ public class App implements Runnable {
 		try {
 			File tmp = new File(args[0]);
 			if (tmp.exists()) {
-				initial = tmp;
+				initial = tmp.getAbsoluteFile();
 			}
 		}
 		catch (Exception e) {
